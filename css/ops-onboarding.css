@@ -1,0 +1,14 @@
+/* The Onboarding stage tracker (ops-onboarding.js). Five stage columns; each application is a card. */
+.ob-track{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:start;}
+.ob-col{background:#f6f8fb;border:1px solid #e1e6ee;border-radius:10px;padding:8px;min-width:0;}
+.ob-head{display:flex;align-items:center;gap:8px;padding:2px 2px 8px;border-bottom:1px solid #e1e6ee;margin-bottom:8px;}
+.ob-num{flex:0 0 22px;height:22px;border-radius:50%;background:#1f2a44;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.ob-count{margin-left:auto;font-weight:700;font-size:13px;color:#1f2a44;}
+.ob-list{display:flex;flex-direction:column;gap:8px;}
+.ob-card{background:#fff;border:1px solid #dde3ec;border-radius:8px;padding:9px 10px;}
+.ob-card-epi{border-left:3px solid #e0a100;}
+.ob-checks{display:flex;flex-wrap:wrap;gap:3px;}
+.ob-chip{font-size:10.5px;color:#6b7686;background:#f1f3f7;border-radius:10px;padding:1px 6px;white-space:nowrap;}
+.ob-chip-ok{color:#1b7f4b;background:#e6f5ec;}
+@media (max-width:1100px){.ob-track{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (max-width:640px){.ob-track{grid-template-columns:1fr;}}

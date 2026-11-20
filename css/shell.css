@@ -1,0 +1,479 @@
+/* ============================================================================
+   shell.css — sidebar, main content.
+
+   The sidebar is a full-height rail docked flush to the true left edge of the
+   viewport — no gap, no card radius, no drop shadow — so it reads as part of
+   the window's own chrome rather than a panel floating over the page. There
+   is no separate banner: the taxpayer identity that used to live in a fixed
+   top strip now lives in the sidebar itself, under the product name, so the
+   sidebar is the whole of the app's chrome and the content area is free to
+   start at the very top of the viewport. The wrapper that used to centre
+   everything inside a fixed 1500px column (the source portal's geometry,
+   tuned for its own floating sidebar card) is gone for the same reason:
+   capping the content column left a growing strip of dead space between the
+   flush sidebar and where the centred column began on anything wider than a
+   laptop.
+   ========================================================================== */
+
+/* ---- wrapper ------------------------------------------------------------ */
+
+.layout_wrapper {
+    width: 100% !important;
+    position: relative !important;
+    display: flow-root !important;
+}
+
+/* ---- banner mark ---------------------------------------------------------
+   Still used by the onboarding (registration) screen's own header, which
+   keeps its own fixed banner — a short, one-off wizard flow rather than the
+   main shell. */
+
+.div_banner .banner_mark {
+    width: 46px;
+    height: 46px;
+    border-radius: 11px;
+    background: var(--navy-800);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.5px;
+    flex: 0 0 auto;
+}
+
+.div_banner .banner_mark span { color: var(--signal-blue); }
+
+.div_banner .banner_mark_img {
+    width: 46px;
+    height: 46px;
+    border-radius: 11px;
+    flex: 0 0 auto;
+    object-fit: cover;
+}
+
+/* ---- sidebar ------------------------------------------------------------ */
+
+@layer sidebar {
+    .sidebar {
+        position: fixed;
+        width: 224px;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow: hidden;          /* the menu scrolls; the footer stays put */
+        z-index: 300;
+        border-radius: 0;
+        box-shadow: 1px 0 0 rgba(255, 255, 255, 0.07);
+        transition: width 0.3s ease;
+        background-color: #0d1b33;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 8px;
+    }
+
+    .sidebar::-webkit-scrollbar { width: 0; }
+
+    /* header: product name + the collapse button */
+    .sidebar_head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        flex: 0 0 auto;
+    }
+
+    .sidebar_title {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #e2e8f0;
+        line-height: 1.25;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    /* Taxpayer identity — what used to live in the fixed banner. This is the
+       thing a user needs confirmed at a glance before issuing or reading a
+       document, so it sits right under the product name, ahead of nav. */
+    .sidebar_tenant {
+        padding: 12px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        flex: 0 0 auto;
+    }
+
+    .sidebar_tenant_name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+        line-height: 1.3;
+    }
+
+    .sidebar_tenant_meta,
+    .sidebar_tenant_address {
+        font-size: 11px;
+        line-height: 1.45;
+        margin-top: 3px;
+    }
+
+    .sidebar_tenant_meta { color: #94a3b8; }
+    .sidebar_tenant_address { color: #64748b; }
+
+    .button_sidebar_collapse {
+        margin-left: auto;
+        width: 30px;
+        height: 30px;
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 7px;
+        background: transparent;
+        color: #cbd5e1;
+        font-size: 14px;
+        line-height: 1;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .button_sidebar_collapse:hover {
+        background: rgba(255, 255, 255, 0.09);
+        color: #fff;
+    }
+
+    .sidebar_menu {
+        flex: 1 1 auto;
+        padding-top: 4px;
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+
+    .sidebar_menu::-webkit-scrollbar { width: 0; }
+
+    .sidebar_section {
+        font-size: 9.5px;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: #64748b;
+        padding: 15px 18px 6px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .sidebar .div_menu {
+        height: 38px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 18px;
+        color: #cbd5e1;
+        font-size: 13px;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+        user-select: none;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .sidebar .div_menu:hover {
+        background-color: rgba(255, 255, 255, 0.055);
+        color: #fff;
+    }
+
+    .sidebar .div_menu.active {
+        background-color: rgba(59, 130, 246, 0.16);
+        border-left-color: #3b82f6;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .sidebar .div_menu .icon {
+        width: 18px;
+        flex: 0 0 auto;
+        text-align: center;
+        font-size: 15px;
+        line-height: 1;
+    }
+
+    .sidebar .div_menu .label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* The account row carries a third line (the clock) on top of name and
+       role, so it needs to grow instead of clipping at the standard 38px
+       nav-item height. */
+    .sidebar .div_menu.div_menu_account {
+        height: auto;
+        padding: 8px 18px;
+    }
+
+    /* The label's single-line ellipsis truncation (built for one nav word)
+       would otherwise hard-clip the clock line instead of wrapping it. */
+    .sidebar .div_menu.div_menu_account .label {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    .sidebar_account_clock {
+        color: #64748b;
+        font-size: 10px;
+        margin-top: 1px;
+    }
+
+    .sidebar .div_menu .soon {
+        margin-left: auto;
+        font-size: 8.5px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        background: #334155;
+        color: #94a3b8;
+        padding: 1px 5px;
+        border-radius: 3px;
+        flex: 0 0 auto;
+    }
+
+    /* Demo-only control — business switcher — pinned just above the account
+       footer so it reads as chrome, not as page content. */
+    .sidebar_demo {
+        flex: 0 0 auto;
+        padding: 10px 14px 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .sidebar_demo_row {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .sidebar_demo_label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+
+    .sidebar_demo .select_tenant_switcher { width: 100%; }
+
+    .sidebar_status_line { font-size: 11px; color: #cbd5e1; line-height: 1.4; }
+    .sidebar_status_dot {
+        display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+        margin-right: 6px; background: #94a3b8;
+    }
+    .sidebar_status_dot.ok { background: #34d399; }
+    .sidebar_status_dot.wait { background: #fbbf24; }
+    .sidebar_status_dot.off { background: #f87171; }
+
+    /* logout pinned to the bottom, as in the source portal */
+    .sidebar_foot {
+        flex: 0 0 auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        margin-top: 10px;
+        padding-top: 6px;
+    }
+
+    .sidebar .div_logout { color: #fca5a5; }
+    .sidebar .div_logout:hover { background-color: rgba(220, 38, 38, 0.16); color: #fecaca; }
+
+    /* ---- collapsed ---- */
+
+    .sidebar.collapsed { width: 58px; }
+
+    .sidebar.collapsed .sidebar_title,
+    .sidebar.collapsed .sidebar_tenant,
+    .sidebar.collapsed .sidebar_demo,
+    .sidebar.collapsed .div_menu .label,
+    .sidebar.collapsed .div_menu .soon { display: none; }
+
+    .sidebar.collapsed .sidebar_head {
+        justify-content: center;
+        padding: 14px 8px 12px;
+    }
+
+    .sidebar.collapsed .button_sidebar_collapse { margin-left: 0; }
+
+    .sidebar.collapsed .sidebar_section {
+        font-size: 0;
+        text-align: center;
+        padding: 14px 0 6px;
+    }
+
+    .sidebar.collapsed .sidebar_section::after {
+        content: "\00b7\00b7\00b7";
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    .sidebar.collapsed .div_menu {
+        justify-content: center;
+        padding: 0;
+        gap: 0;
+        border-left-width: 0;
+        border-radius: 8px;
+        margin: 2px 8px;
+        height: 36px;
+    }
+}
+
+/* ---- main content ------------------------------------------------------- */
+
+@layer main_content {
+    .main_content {
+        padding: 20px !important;
+        margin-left: 224px !important;
+        min-height: 100vh !important;
+        z-index: 5 !important;
+        transition: margin-left 0.2s ease !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0;
+    }
+
+    .main_content.collapsing { margin-left: 58px !important; }
+
+    /* Below 900px the sidebar is a persistent collapsed rail (no separate
+       hide/show state at this width — see Nav.autoCollapse). The sidebar's
+       own geometry is already flush/full-height at every width, so only the
+       content clearance and padding need a narrower-screen value here; this
+       is a CSS-only safety net independent of autoCollapse's one-time JS
+       check, for a resize that happens after it already ran. */
+    @media (max-width: 900px) {
+        .main_content,
+        .main_content.collapsing { margin-left: 58px !important; padding: 14px !important; }
+    }
+}
+
+/* ---- screen-level page furniture ---------------------------------------- */
+
+/* Every screen opens with this: a title line above the working card. */
+.screen_head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.screen_head .screen_title {
+    font-size: 20px;
+    font-family: var(--font-display);
+    font-weight: 650;
+    color: var(--ink);
+    line-height: 1.2;
+    margin: 0;
+}
+
+.screen_head .screen_sub {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 3px;
+    max-width: 900px;
+}
+
+/* Tabs, from the source portal's account_settlement pattern. */
+.tab_button {
+    background-color: var(--slate-100) !important;
+    color: var(--slate-600) !important;
+    border-top-left-radius: 0.5rem !important;
+    border-top-right-radius: 0.5rem !important;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: background-color .12s ease, color .12s ease;
+}
+
+.tab_button:hover:not(.active) {
+    background-color: var(--slate-200) !important;
+    color: var(--ink) !important;
+}
+
+.tab_button:active {
+    transform: translateY(1px);
+}
+
+.tab_button:focus-visible {
+    outline: 2px solid var(--signal-blue);
+    outline-offset: -2px;
+}
+
+.tab_button.active {
+    background-color: var(--surface) !important;
+    color: var(--ink) !important;
+    font-weight: 600 !important;
+}
+
+/* The tiles behind a tab strip, from the source portal's dashboard.css. Their
+   geometry is its own; the colour is ours — the portal's was its brand purple. */
+.tab_content_card {
+    flex: 1 1 300px !important;
+    max-width: 310px !important;
+    min-width: 10px !important;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+.tab_content_card_data_holder {
+    border: 1px solid #274a7a !important;
+    background: #14284b !important;
+    /* A one-line label ("Cash Payments") and a two-line one ("Other /
+       Unspecified") would otherwise give the same card two different
+       heights depending on which set is showing — the thing that made the
+       branch → payment-method drill-down feel like it was jumping. */
+    min-height: 124px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* The drill-down's card grid swaps its whole content in place (branch cards
+   → payment-method cards → back). A hard swap reads as a jump because the
+   new set is rarely the same size as the old one; fading through the change
+   hides that instead of smoothing it away with layout tricks. */
+.div_issuance_cards { transition: opacity .15s ease; }
+
+.chart { height: 320px !important; }
+
+/* Placeholder for screens not yet converted. */
+.screen_placeholder {
+    border: 1px dashed #d1d5db;
+    border-radius: 10px;
+    background: #fbfbfc;
+    padding: 56px 24px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.screen_placeholder .ph_icon { font-size: 30px; color: #9ca3af; }
+.screen_placeholder .ph_title { font-size: 16px; font-weight: 700; color: #374151; margin-top: 10px; }
+.screen_placeholder .ph_text { font-size: 13px; margin-top: 6px; max-width: 560px; margin-inline: auto; }
+
+/* ---- phones: the menu is a drawer ---------------------------------------- */
+
+@layer sidebar {
+    .mobile_menu_btn { display: none; }
+    @media (max-width: 575.98px) {
+        .sidebar { transform: translateX(-100%); transition: transform 0.25s ease; }
+        .sidebar.m-open { transform: none; box-shadow: 0 0 0 100vmax rgba(15, 23, 42, 0.45); }
+        .main_content,
+        .main_content.collapsing { margin-left: 0 !important; padding: 56px 14px 14px !important; }
+        .button_sidebar_collapse { display: none; }
+        .mobile_menu_btn {
+            display: flex; align-items: center; justify-content: center;
+            position: fixed; top: 10px; left: 10px; z-index: 290;
+            width: 38px; height: 38px; border-radius: 8px;
+            border: 1px solid var(--slate-200, #e2e8f0);
+            background: #fff; color: #0d1b33; font-size: 20px;
+        }
+    }
+}

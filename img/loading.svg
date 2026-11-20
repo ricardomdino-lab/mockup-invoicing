@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" width="360" height="120" role="img" aria-label="Eastland Printink Electronic Invoicing">
+  <rect x="4" y="18" width="84" height="84" rx="18" fill="#001f4d"/>
+  <text x="46" y="74" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="46" font-weight="700" fill="#ffffff">e</text>
+  <text x="66" y="74" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="46" font-weight="700" fill="#60a5fa">I</text>
+  <text x="104" y="56" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#001f4d">Electronic Invoicing</text>
+  <text x="104" y="82" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="500" fill="#6b7280">Eastland Printink, Inc.</text>
+</svg>

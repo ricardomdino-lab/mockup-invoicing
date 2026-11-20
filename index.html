@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitized Invoice System — EPI</title>
+
+<!-- Set before first paint so a returning dark-mode user never sees a flash
+     of the light theme. -->
+<script>
+  (function(){
+    try{
+      var t = localStorage.getItem('epi-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch(e){}
+  })();
+</script>
+
+<!-- ===== Typefaces ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+
+<!-- ===== Design system (carried over from the DORS portal) ===== -->
+<link rel="stylesheet" href="lib/bootstrap5.css">
+<link rel="stylesheet" href="lib/bootstrap-icons.css">
+<link rel="stylesheet" href="lib/fontawesome.css">
+<link rel="stylesheet" href="lib/jquery-ui.min.css">
+<link rel="stylesheet" href="lib/swal2.min.css">
+<link rel="stylesheet" href="lib/select2.min.css">
+<link rel="stylesheet" href="lib/dragndrop.table.columns.css">
+
+<!-- DataTables -->
+<link rel="stylesheet" href="lib/datatable.dataTables.css">
+<link rel="stylesheet" href="lib/datatable.bootstrap5.css">
+<link rel="stylesheet" href="lib/datatable.css">
+
+<!-- Date pickers: flatpickr for single/month, daterangepicker for ranges -->
+<link rel="stylesheet" href="lib/flatpickr.min.css">
+<link rel="stylesheet" href="lib/flatpickr.monthSelect.css">
+<link rel="stylesheet" href="lib/datepicker.css">
+
+<link rel="stylesheet" href="css/for_all.css">
+
+<!-- ===== This product ===== -->
+<link rel="stylesheet" href="css/shell.css">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/invoice.css">
+<link rel="stylesheet" href="css/agreement.css">
+<link rel="stylesheet" href="css/ops-onboarding.css">
+</head>
+<body>
+
+<!-- ============================================================
+     SIGN IN
+     ============================================================ -->
+<div id="view-login" class="screen">
+  <div class="main_bg min-vh-100 d-flex align-items-center justify-content-center p-3">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-9 col-lg-6 col-xl-5">
+
+          <div class="card border-0 rounded-4 shadow-lg overflow_hidden">
+            <div class="card-body p-0">
+              <div class="p-4 p-md-5 bg-white">
+
+                <div id="login-step-credentials">
+
+                  <div class="text-center mb-4">
+                    <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+                      <img src="img/dis-mark.png" alt="Digitized Invoice System" class="height_40 rounded-3">
+                      <span class="fw-bold fs_20 text-dark">Digitized Invoice System</span>
+                    </div>
+                    <a href="landing.html" class="fs_12 text-secondary d-inline-block mb-2">&larr; Back to overview</a>
+                    <h2 class="fw-bold fs_30 text-dark mb-1">Welcome</h2>
+                    <span class="d-block text-secondary fs_14">
+                      Enter your username and password to sign in.
+                    </span>
+                    <div class="hr_gray_200 mt-3 mx-auto"></div>
+                  </div>
+
+                  <div class="mb-3">
+                    <span class="d-block fw-semibold fs_13 text-dark mb-2">Username</span>
+                    <div class="input-group">
+                      <span class="input-group-text bg_blue_100 border-end-0">
+                        <i class="bi bi-person fs_14"></i>
+                      </span>
+                      <input type="email"
+                             class="form-control border-start-0 px-2 input_login_email height_40 fs_14 shadow-none"
+                             placeholder="you@company.com" maxlength="80" autocomplete="username">
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <span class="d-block fw-semibold fs_13 text-dark mb-2">Password</span>
+                    <div class="input-group">
+                      <span class="input-group-text bg_blue_100 border-end-0">
+                        <i class="bi bi-key fs_14"></i>
+                      </span>
+                      <input type="password"
+                             class="form-control border-start-0 border-end-0 px-2 input_login_password height_40 fs_14 shadow-none"
+                             placeholder="Enter your password" maxlength="50" autocomplete="new-password">
+                      <span class="input-group-text bg_blue_100 border-start-0">
+                        <i class="bi bi-eye text-secondary icon_show_hide hover"
+                           data-target=".input_login_password"></i>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="d-grid gap-2">
+                    <button type="button"
+                            class="lbtn lbtn-primary lbtn-lg w-100 button_validate_credentials">
+                      Log In
+                    </button>
+                  </div>
+
+                  <div class="hr_gray_200 my-4"></div>
+
+                  <div class="text-center">
+                    <span class="fs_13 text-secondary">Not a client yet?</span>
+                    <span class="fs_13 fw-semibold hyperlink ms-1" onclick="Onboarding.start()">Apply for an account</span>
+                  </div>
+                  <div class="text-center mt-2">
+                    <span class="fs_13 text-secondary">Already applied?</span>
+                    <span class="fs_13 fw-semibold hyperlink ms-1" onclick="Auth.checkApplication()">Check your application</span>
+                  </div>
+
+                  <!-- Same reasoning: someone holding an invitation has no
+                       account yet, so the way in cannot be behind one. -->
+                  <div class="text-center mt-2">
+                    <span class="fs_13 text-secondary">Been invited to an account?</span>
+                    <span class="fs_13 fw-semibold hyperlink ms-1" onclick="Activate.open()">Activate it</span>
+                  </div>
+
+                  <div class="text-center mt-3 fs_11 text-muted">
+                    Demonstration only, not yet BIR-accredited. No live BIR connection. Data stays in this browser.
+                    The demo password is <strong>demo1234</strong>.
+                  </div>
+                  <div class="text-center mt-2 fs_11 text-muted" id="login-version"></div>
+
+                </div>
+
+                <!-- Shown after credentials validate. Picked fresh every sign-in
+                     rather than stored per account, matching how lightweight the
+                     rest of this demo's auth already is. -->
+                <div id="login-step-mfa" class="d-none">
+
+                  <div class="text-center mb-4">
+                    <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+                      <img src="img/dis-mark.png" alt="Digitized Invoice System" class="height_40 rounded-3">
+                      <span class="fw-bold fs_20 text-dark">Digitized Invoice System</span>
+                    </div>
+                    <h2 class="fw-bold fs_30 text-dark mb-1">Verify it's you</h2>
+                    <span class="d-block text-secondary fs_14">
+                      Select how you'd like to confirm this sign-in.
+                    </span>
+                    <div class="hr_gray_200 mt-3 mx-auto"></div>
+                  </div>
+
+                  <div id="login-mfa-picker" class="radio-cards mb-3">
+                    <label class="radio-card" data-mfa-method="email">
+                      <input type="radio" name="login-mfa-method">
+                      <div>
+                        <div class="radio-card-title"><i class="bi bi-envelope me-1"></i> Email code</div>
+                        <div class="radio-card-desc">Send a 6-digit code to your email address.</div>
+                      </div>
+                    </label>
+                    <label class="radio-card" data-mfa-method="authenticator">
+                      <input type="radio" name="login-mfa-method">
+                      <div>
+                        <div class="radio-card-title"><i class="bi bi-shield-lock me-1"></i> Authenticator app</div>
+                        <div class="radio-card-desc">Enter the 6-digit code from your authenticator app.</div>
+                      </div>
+                    </label>
+                    <label class="radio-card" data-mfa-method="passkey">
+                      <input type="radio" name="login-mfa-method">
+                      <div>
+                        <div class="radio-card-title"><i class="bi bi-fingerprint me-1"></i> Passkey</div>
+                        <div class="radio-card-desc">Use your device's fingerprint, face, or screen lock.</div>
+                      </div>
+                    </label>
+                  </div>
+
+                  <div id="login-mfa-body"></div>
+
+                  <div class="text-center mt-3">
+                    <span class="fs_13 fw-semibold hyperlink" id="login-mfa-back">&larr; Back to credentials</span>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="demo-accounts-toggle" onclick="Auth.openDemoAccounts()">
+    <i class="bi bi-people"></i> Demo Accounts
+  </button>
+</div>
+
+<!-- ============================================================
+     PUBLIC DOCUMENT VERIFICATION
+
+     No account, no session, no menu. A buyer arrives here holding a piece of
+     paper or a PDF and leaves knowing whether it is real.
+     ============================================================ -->
+<div id="view-verify" class="screen hidden">
+  <div class="main_bg min-vh-100 d-flex align-items-center justify-content-center p-3">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-7 col-xl-6">
+
+          <div class="card border-0 rounded-4 shadow-lg overflow_hidden">
+            <div class="card-body p-4 p-md-5 bg-white">
+
+              <div class="text-center mb-4">
+                <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+                  <img src="img/dis-mark.png" alt="Digitized Invoice System" class="height_40 rounded-3">
+                  <span class="fw-bold fs_20 text-dark">Digitized Invoice System</span>
+                </div>
+                <h2 class="fw-bold fs_30 text-dark mb-1">Verify an invoice</h2>
+                <span class="d-block text-secondary fs_14">
+                  Scan the QR code on an invoice to check it
+                  against what the seller issued.
+                </span>
+                <div class="hr_gray_200 mt-3 mx-auto"></div>
+              </div>
+
+              <div id="verify-result" class="mt-4">
+                <div class="callout"><div class="fs_13 text-secondary text-center">Open your phone camera and scan the QR code printed on the invoice.</div></div>
+              </div>
+
+              <div class="hr_gray_200 my-4"></div>
+
+              <div class="text-center">
+                <span class="fs_13 fw-semibold hyperlink" onclick="Verify.close()">Back to sign in</span>
+              </div>
+
+              <div class="text-center mt-3 fs_11 text-muted">
+                The seller is told that their invoice was checked, but not by whom. You are not signed in and nothing about you is recorded.
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ONBOARDING WIZARD
+     ============================================================ -->
+<!-- ============================================================
+     ACTIVATE AN INVITATION
+     No account behind it — the person here does not have one yet.
+     ============================================================ -->
+<div id="view-activate" class="screen hidden">
+  <div class="main_bg min-vh-100 d-flex align-items-center justify-content-center p-3">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-7 col-xl-6">
+
+          <div class="card border-0 rounded-4 shadow-lg overflow_hidden">
+            <div class="card-body p-4 p-md-5 bg-white">
+
+              <div class="text-center mb-4">
+                <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+                  <img src="img/dis-mark.png" alt="Digitized Invoice System" class="height_40 rounded-3">
+                  <span class="fw-bold fs_20 text-dark">Digitized Invoice System</span>
+                </div>
+                <h2 class="fw-bold fs_30 text-dark mb-1">Activate your account</h2>
+                <span class="d-block text-secondary fs_14">
+                  An account was created for you. Complete the details here to activate it. Your name is recorded in the activity log.
+                </span>
+                <div class="hr_gray_200 mt-3 mx-auto"></div>
+              </div>
+
+              <div id="activate-body"></div>
+
+              <div class="hr_gray_200 my-4"></div>
+
+              <div class="text-center">
+                <span class="fs_13 fw-semibold hyperlink" onclick="Activate.close()">Back to sign in</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="view-onboarding" class="screen hidden">
+  <header class="div_banner text-white p-3 d-flex justify-content-center align-items-center">
+    <div class="d-flex justify-content-between align-items-center width_1500 w-100 px-3">
+      <div class="d-flex gap-3 align-items-center">
+        <img src="img/dis-mark.png" alt="Digitized Invoice System" class="banner_mark_img">
+        <div class="d-flex flex-column line_height_1">
+          <span class="fs_20 fw-bold" id="ob-title">Apply for an account</span>
+          <small class="text-secondary">Digitized Invoice System</small>
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="lbtn lbtn-sm lbtn-hero" id="ob-demo-btn" onclick="Onboarding.demoFill()"
+                title="Fill this step with sample data (demo only)">
+          Demo: fill details
+        </button>
+        <button class="lbtn lbtn-sm lbtn-hero" id="ob-exit-btn" onclick="Onboarding.exit()">
+          Exit application
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="ob_shell d-flex justify-content-center">
+    <div class="width_1500 w-100 d-flex flex-column flex-lg-row gap-3 p-3">
+      <aside class="ob_rail">
+        <div class="lcard lcard-hero"><div class="lcard-body d-flex flex-column">
+          <span class="lbadge lbadge-hero mb-3 align-self-start" id="ob-lane-badge">New application</span>
+          <ol id="ob-step-list" class="ob_steps mb-0"></ol>
+        </div></div>
+      </aside>
+      <main class="flex-grow-1 min_width_0">
+        <div id="ob-content"></div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PORTAL
+     ============================================================ -->
+<div id="view-portal" class="screen hidden">
+
+  <div class="layout_wrapper">
+
+    <!-- Sidebar: product identity, then the taxpayer this session is acting
+         for — the identity that actually matters here — then navigation.
+         No separate banner: this rail is the whole of the app's chrome. -->
+    <button type="button" class="mobile_menu_btn" id="mobile-menu" aria-label="Open menu" aria-expanded="false"
+            onclick="Nav.mobileMenu()"><i class="bi bi-list"></i></button>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar_head">
+        <div class="sidebar_title">
+          Digitized Invoice
+        </div>
+        <button type="button" class="button_sidebar_collapse" id="sidebar-collapse"
+                onclick="Nav.toggleRail()" title="Collapse menu">
+          <i class="bi bi-chevron-double-left"></i>
+        </button>
+      </div>
+
+      <div class="sidebar_tenant" id="sidebar-tenant">
+        <div class="sidebar_tenant_name" id="banner-tenant-name">—</div>
+        <div class="sidebar_tenant_meta" id="banner-tenant-meta">—</div>
+        <div class="sidebar_tenant_address" id="banner-tenant-address">—</div>
+      </div>
+
+      <div class="sidebar_menu" id="rail"></div>
+
+      <!-- Demo-only control (business switcher) that used to live in a fixed
+           top banner. It belongs to the app's chrome, not to any one screen,
+           so it stays in the sidebar and the content area starts clean. -->
+      <div class="sidebar_demo">
+        <div class="sidebar_demo_row">
+          <span class="sidebar_demo_label">BIR EIS</span>
+          <span class="sidebar_status_line" id="eis-status">—</span>
+        </div>
+        <div class="sidebar_demo_row">
+          <span class="sidebar_demo_label">System</span>
+          <span class="sidebar_status_line" id="system-version">—</span>
+        </div>
+        <div class="sidebar_demo_row">
+          <span class="sidebar_demo_label" id="tenant-switcher-label">Demo business</span>
+          <select class="form-select form-select-sm fs_11 select_tenant_switcher"
+                  id="tenant-switcher"></select>
+        </div>
+      </div>
+
+      <div class="sidebar_foot">
+        <div class="div_menu" onclick="UI.toggleTheme()" title="Toggle theme">
+          <span class="icon"><i class="bi bi-moon-stars" id="theme-toggle-icon"></i></span>
+          <span class="label" id="theme-toggle-label">Dark mode</span>
+        </div>
+        <div class="div_menu div_menu_account" onclick="Auth.openUserSheet()" title="Account">
+          <span class="icon"><i class="bi bi-person-circle"></i></span>
+          <span class="label">
+            <span id="side-user-name">—</span>
+            <small class="d-block text-secondary fs_10" id="side-user-role">—</small>
+            <small class="d-block div_date sidebar_account_clock">-</small>
+          </span>
+        </div>
+        <div class="div_menu div_logout" title="Sign out">
+          <span class="icon"><i class="bi bi-box-arrow-right"></i></span>
+          <span class="label">Sign out</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main_content" id="main_content">
+      <div id="account-banner"></div>
+      <div id="content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ACCOUNT MANAGEMENT
+     The source portal's modal_account_management, with the fields this
+     product has. Two of its sections are gone on purpose: there is no
+     password here, because an account is invited and activated by the person
+     it belongs to, and no agency or department, because a role plus a branch
+     is the whole of what an account is scoped by.
+     ============================================================ -->
+<div class="modal fade modal_top modal_account_management" tabindex="-1"
+     aria-labelledby="modal_account_management" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered justify-content-center">
+    <div class="modal-content width_500">
+      <div class="modal-body p-4 d-flex flex-column gap-4">
+
+        <div class="text-center">
+          <span class="fw-bold modal-title-text span_account_management_title">User</span>
+        </div>
+
+        <div class="text-muted">
+          <span class="fw-semibold">USER INFORMATION</span>
+          <div class="ms-1">
+            <div class="row fs_12 g-2">
+              <div class="col-12">
+                <label for="iac_fullname" class="mb-1">Full name</label>
+                <input type="text" id="iac_fullname"
+                       class="form-control form-control-sm fw-semibold input_account_management_fullname" />
+              </div>
+              <div class="col-md-7">
+                <label for="iac_email" class="mb-1">Email address</label>
+                <input type="email" id="iac_email"
+                       class="form-control form-control-sm fw-semibold iv_email input_account_management_email_address" />
+              </div>
+              <div class="col-md-5">
+                <label for="iac_position" class="mb-1">Position</label>
+                <input type="text" id="iac_position"
+                       class="form-control form-control-sm fw-semibold input_account_management_position" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-muted">
+          <span class="fw-semibold">ACCESS</span>
+          <div class="ms-1">
+            <div class="row fs_12 g-2">
+              <div class="col-md-6">
+                <label for="sac_role" class="mb-1">Role</label>
+                <select id="sac_role"
+                        class="form-control form-control-sm fw-semibold select_account_management_role x"></select>
+              </div>
+              <div class="col-md-6 div_account_management_branch">
+                <label for="sac_branch" class="mb-1">Branch</label>
+                <select id="sac_branch"
+                        class="form-control form-control-sm fw-semibold select_account_management_branch x"></select>
+              </div>
+              <div class="col-12">
+                <div class="hint-box rounded-2 p-2 fs_11 div_account_management_role_hint"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shown when inviting: says what actually happens on save. -->
+        <div class="callout callout-info div_account_management_invite">
+          <span class="callout-ico"><i class="bi bi-envelope"></i></span>
+          <div>No password is set here. An invitation is emailed, and the account is usable only after the invited person activates it, so the activity log names the right person.</div>
+        </div>
+
+        <!-- Shown when editing an existing account. -->
+        <div class="text-muted d-none div_account_management_state">
+          <span class="fw-semibold">USER STATE</span>
+          <div class="ms-1 mt-2 d-flex align-items-center justify-content-between gap-2 flex-wrap">
+            <span class="span_account_management_status"></span>
+            <div class="d-flex gap-2">
+              <!-- There is no mail server behind a mockup, so the link that
+                   would have been emailed is openable from here instead. -->
+              <button type="button"
+                      class="lbtn lbtn-sm lbtn-ghost fs_11 d-none button_account_management_invitelink">
+                Open invitation
+              </button>
+              <button type="button"
+                      class="lbtn lbtn-sm lbtn-subtle fs_11 d-none button_account_management_resend">
+                Resend invitation
+              </button>
+              <button type="button"
+                      class="lbtn lbtn-sm lbtn-danger fs_11 button_account_management_disable">
+                Disable user
+              </button>
+            </div>
+          </div>
+          <div class="fs_11 mt-2">
+            A user is disabled, never deleted. Each invoice keeps the name of the user who issued it.
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 align-items-start text-secondary fs_12">
+          <input type="checkbox" id="ac_chk_audit_confirm"
+                 class="mt-1 checkbox checkbox_account_management_save_account">
+          <label for="ac_chk_audit_confirm">
+            I understand that this change takes effect immediately and is recorded in the
+            activity log against my name.
+          </label>
+        </div>
+
+        <div class="row d-flex justify-content-center mt-1">
+          <div class="d-flex justify-content-center gap-2">
+            <button type="button"
+                    class="lbtn lbtn-ghost text-center fw-bold px-5 lbtn-sm fs_11 button_account_management_cancel">Close</button>
+            <button type="button"
+                    class="lbtn lbtn-primary text-center fw-bold px-5 lbtn-sm fs_11 button_account_management_save" disabled>Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXPORT TO PDF
+     Carried over from the source portal's shared modal partial, so the
+     selectors its export code uses are unchanged. Two differences: the
+     per-document column list is what the reporting engine can lay out,
+     and the year pickers are filled from .input_year_list below rather
+     than from a server-rendered value.
+     ============================================================ -->
+<input type="hidden" class="input_year_list">
+
+<div class="modal fade modal_top modal_export_to_pdf" tabindex="-1" aria-labelledby="modal_export_to_pdf" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered justify-content-center">
+    <div class="modal-content width_450">
+      <div class="modal-body p-4 d-flex flex-column gap-2 text-wrap">
+        <div class="text-center">
+          <span class="fw-bold modal-title-text">EXPORT TO PDF</span>
+        </div>
+        <div>
+          <table class="table table-bordered table-hover mb-0">
+            <thead>
+              <tr>
+                <th class="d-flex justify-content-center text-muted fs_16 p-1 px-3">
+                  <span>Data filtering options</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="d-flex align-items-center gap-2 fs_16 p-1 px-3">
+                  <input class="checkbox_export_to_pdf_daily_summary checkbox" type="checkbox" id="checkbox_export_to_pdf_daily_summary" name="checkbox_export_to_pdf">
+                  <label for="checkbox_export_to_pdf_daily_summary">Daily Summary</label>
+                </td>
+              </tr>
+              <tr>
+                <td class="d-flex align-items-center gap-2 fs_16 p-1 px-3">
+                  <input class="checkbox_export_to_pdf_weekly_summary checkbox" type="checkbox" id="checkbox_export_to_pdf_weekly_summary" name="checkbox_export_to_pdf">
+                  <label for="checkbox_export_to_pdf_weekly_summary">Weekly Summary</label>
+                </td>
+              </tr>
+              <tr>
+                <td class="d-flex align-items-center gap-2 fs_16 p-1 px-3">
+                  <input class="checkbox_export_to_pdf_export_to_pdf_monthly_summary checkbox" type="checkbox" id="checkbox_export_to_pdf_export_to_pdf_monthly_summary" name="checkbox_export_to_pdf">
+                  <label for="checkbox_export_to_pdf_export_to_pdf_monthly_summary">Monthly Summary</label>
+                </td>
+              </tr>
+              <tr>
+                <td class="d-flex align-items-center gap-2 fs_16 p-1 px-3">
+                  <input class="checkbox_export_to_pdf_quarterly_summary checkbox" type="checkbox" id="checkbox_export_to_pdf_quarterly_summary" name="checkbox_export_to_pdf">
+                  <label for="checkbox_export_to_pdf_quarterly_summary">Quarterly Summary</label>
+                </td>
+              </tr>
+              <tr>
+                <td class="d-flex align-items-center gap-2 fs_16 p-1 px-3">
+                  <input class="checkbox_export_to_pdf_annual_summary checkbox" type="checkbox" id="checkbox_export_to_pdf_annual_summary" name="checkbox_export_to_pdf">
+                  <label for="checkbox_export_to_pdf_annual_summary">Annual Summary</label>
+                </td>
+              </tr>
+              <tr>
+                <td class="d-flex align-items-center gap-2 fs_16 p-1 px-3 div_checkbox_export_to_pdf_current_data_summary">
+                  <input class="checkbox_export_to_pdf_current_data_summary checkbox" type="checkbox" id="checkbox_export_to_pdf_current_data_summary" name="checkbox_export_to_pdf">
+                  <label for="checkbox_export_to_pdf_current_data_summary">Per invoice with current filtered data</label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-bordered table-hover">
+            <thead class="table_export_to_pdf_current_data d-none">
+              <tr>
+                <th class="text-center align-middle">#</th>
+                <th class="ps-0">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div class="form-check d-flex align-items-center gap-2 m-0">
+                      <input class="checkbox_export_to_pdf_all checkbox" type="checkbox" id="checkbox_export_to_pdf_all" checked>
+                      <label class="form-check-label fw-bold mb-0" for="checkbox_export_to_pdf_all">All</label>
+                    </div>
+                    <span class="lbadge bg-info text-dark fs_11 fw-normal px-2 py-1">
+                      <i class="fas fa-info-circle me-1"></i> Drag rows to reorder layout columns
+                    </span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="table_export_to_pdf_list_current_data table_export_to_pdf_current_data d-none"></tbody>
+            <tfoot>
+              <tr class="tr_export_to_pdf_daily d-none">
+                <td colspan="2" class="p-1 px-3">
+                  <label for="input_date_export_to_pdf_daily_summary">Date</label>
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white border-end-0 text-muted icon_date">
+                      <i class="fa fa-calendar-alt"></i>
+                    </span>
+                    <input type="text" id="input_date_export_to_pdf_daily_summary" class="form-control border-start-0 ps-2 width_200 input_date input_date_export_to_pdf_daily_summary" data-day_max="0" placeholder="Date" readonly />
+                  </div>
+                </td>
+              </tr>
+              <tr class="tr_export_to_pdf_weekly d-none">
+                <td colspan="2" class="p-1 px-3">
+                  <label for="input_date_range_export_to_pdf_weekly_summary">Date Range</label>
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white border-end-0 text-muted icon_date_range">
+                      <i class="fa fa-calendar-alt"></i>
+                    </span>
+                    <input type="text" id="input_date_range_export_to_pdf_weekly_summary" class="form-control border-start-0 ps-2 width_200 input_date_range input_date_range_export_to_pdf_weekly_summary" data-day_max="0" placeholder="Date From - Date To" readonly />
+                  </div>
+                </td>
+              </tr>
+              <tr class="tr_export_to_pdf_monthly d-none">
+                <td colspan="2" class="p-1 px-3">
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="input_month_year_export_to_pdf_monthly_summary_from">Month From</label>
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0 text-muted icon_month_year">
+                          <i class="fa fa-calendar-alt"></i>
+                        </span>
+                        <input type="text" id="input_month_year_export_to_pdf_monthly_summary_from" class="form-control border-start-0 ps-2 input_month_year input_month_year_export_to_pdf_monthly_summary_from" data-day_max="0" placeholder="Date" readonly />
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <label for="input_month_year_export_to_pdf_monthly_summary_to">Month To</label>
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0 text-muted icon_month_year">
+                          <i class="fa fa-calendar-alt"></i>
+                        </span>
+                        <input type="text" id="input_month_year_export_to_pdf_monthly_summary_to" class="form-control border-start-0 ps-2 input_month_year input_month_year_export_to_pdf_monthly_summary_to" data-day_max="0" placeholder="Date" readonly />
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr class="tr_export_to_pdf_quarterly d-none">
+                <td colspan="2" class="fs_16 p-1 px-3">
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="select_year_export_to_pdf">Year</label>
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0 text-muted icon_year">
+                          <i class="fa fa-calendar-alt"></i>
+                        </span>
+                        <select id="select_year_export_to_pdf" class="form-select form-select-sm border-start-0 ps-2 select_year select_year_export_to_pdf"></select>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <label for="select_export_to_pdf_quarter">Quarter</label>
+                      <select id="select_export_to_pdf_quarter" class="form-control form-control-sm select_export_to_pdf_quarter x"></select>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr class="tr_export_to_pdf_yearly d-none">
+                <td colspan="2" class="fs_16 p-1 px-3">
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="select_year_export_to_pdf_from">Year From</label>
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0 text-muted icon_year">
+                          <i class="fa fa-calendar-alt"></i>
+                        </span>
+                        <select id="select_year_export_to_pdf_from" class="form-select form-select-sm border-start-0 ps-2 select_year select_year_export_to_pdf_from"></select>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <label for="select_year_export_to_pdf_to">Year To</label>
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0 text-muted icon_year">
+                          <i class="fa fa-calendar-alt"></i>
+                        </span>
+                        <select id="select_year_export_to_pdf_to" class="form-select form-select-sm border-start-0 ps-2 select_year select_year_export_to_pdf_to"></select>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="d-flex flex-row gap-2 w-100">
+          <button class="lbtn lbtn-sm lbtn-ghost button_export_to_pdf_close w-100">Close</button>
+          <button class="lbtn lbtn-sm lbtn-accent button_export_to_pdf w-100">Export to PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     GENERIC MODAL + TOASTS
+     ============================================================ -->
+<div id="modal-root" class="lmodal-backdrop hidden">
+  <div class="lmodal" id="modal-box">
+    <div class="lmodal-head">
+      <h3 id="modal-title">—</h3>
+      <button class="lmodal-x" onclick="UI.closeModal()">&times;</button>
+    </div>
+    <div class="lmodal-body" id="modal-body"></div>
+    <div class="lmodal-foot" id="modal-foot"></div>
+  </div>
+</div>
+
+<div id="toast-stack" class="ltoast-stack" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ===== Vendored libraries. Order matters and is deliberate:
+     jQuery and moment first (daterangepicker depends on both), then the
+     widgets, then for_all.js which wires them to the markup. ===== -->
+<script src="lib/jquery.js"></script>
+<script src="lib/jquery-ui.js"></script>
+<script src="lib/moment.js"></script>
+<script src="lib/bootstrap5.js"></script>
+<script src="lib/qrcode.js"></script>
+
+<!-- DataTables. buttons must precede its bootstrap5 styling adapter. -->
+<script src="lib/datatable.js"></script>
+<script src="lib/datatable.plugin.js"></script>
+<script src="lib/datatable.buttons.js"></script>
+<script src="lib/datatable.print.js"></script>
+<script src="lib/datatable.html5.js"></script>
+<script src="lib/datatable.bootstrap5.js"></script>
+
+<script src="lib/swal2.min.js"></script>
+<script src="lib/select2.min.js"></script>
+<script src="lib/dragndrop.table.columns.min.js"></script>
+
+<script src="lib/flatpickr.min.js"></script>
+<script src="lib/flatpickr.monthSelect.js"></script>
+<script src="lib/datepicker.js"></script>
+
+<!-- Charts, as in the source portal. -->
+<script src="lib/apexcharts.min.js"></script>
+
+<!-- PDF generation. The source portal rendered PDFs server-side; with no
+     server here it happens in the browser, so the bundle (html2canvas +
+     jsPDF included) is loaded instead. -->
+<script src="lib/html2pdf.bundle.min.js"></script>
+
+<!-- ===== This product ===== -->
+<script src="js/core.js"></script>
+<script src="js/local-api.js"></script>
+<script src="js/for_all.js"></script>
+<script src="js/seed.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/reporting.js"></script>
+<script src="js/onboarding.js"></script>
+<script src="js/invoice-doc.js"></script>
+<script src="js/home.js"></script>
+<script src="js/invoices.js"></script>
+<script src="js/activity.js"></script>
+<script src="js/accounts.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/import.js"></script>
+<script src="js/issue.js"></script>
+<script src="js/records.js"></script>
+<script src="js/lists.js"></script>
+<script src="js/resilience.js"></script>
+<script src="js/billing.js"></script>
+<script src="js/ops.js"></script>
+<script src="js/ops-onboarding.js"></script>
+<script src="js/incidents.js"></script>
+<script src="js/payments.js"></script>
+<script src="js/deposit.js"></script>
+<script src="js/realtime.js"></script>
+<script src="js/provider-settlement.js"></script>
+<script src="js/agreement-text.js"></script>
+<script src="js/agreement.js"></script>
+<script src="js/template.js"></script>
+<script src="js/verify.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/platforms.js"></script>
+<script src="js/corrections.js"></script>
+<script src="js/delivery.js"></script>
+<script src="js/queue.js"></script>
+<script src="js/transmission.js"></script>
+<script src="js/session.js"></script>
+<script src="js/activate.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

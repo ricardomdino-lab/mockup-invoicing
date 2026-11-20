@@ -1,0 +1,262 @@
+/* ============================================================
+   Digitized Invoice System — base, theme, layout
+   Neutral professional: navy + slate
+   ============================================================ */
+
+:root{
+  --navy-900:#0d1b33;
+  --navy-800:#14284b;
+  --navy-700:#1c375f;
+  --navy-600:#274a7a;
+  --blue-600:#2563eb;
+  --blue-500:#3b82f6;
+  --blue-50:#eff6ff;
+
+  --slate-900:#0f172a;
+  --slate-700:#334155;
+  --slate-600:#475569;
+  --slate-500:#64748b;
+  --slate-400:#94a3b8;
+  --slate-300:#cbd5e1;
+  --slate-200:#e2e8f0;
+  --slate-100:#f1f5f9;
+  --slate-50:#f8fafc;
+
+  --green-600:#059669;
+  --green-50:#ecfdf5;
+  --amber-600:#d97706;
+  --amber-50:#fffbeb;
+  --red-600:#dc2626;
+  --red-50:#fef2f2;
+  --violet-600:#7c3aed;
+  --violet-50:#f5f3ff;
+
+  /* Drill-card token names — same hexes as above, named per the design
+     system so hero/accent usage reads as intentional, not incidental slate. */
+  --ink-navy:var(--navy-900);
+  --hero-navy:var(--navy-800);
+  --navy-rule:var(--navy-600);
+  --signal-blue:var(--blue-500);
+  --paper:#f7f8fc;
+
+  --ink:#10182b;
+  --muted:var(--slate-500);
+  --line:var(--slate-200);
+  --bg:var(--paper);
+  --surface:#ffffff;
+
+  --radius:8px;
+  --radius-md:10px;
+  --radius-lg:12px;
+  --radius-xl:16px;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.06);
+  --shadow:0 2px 8px rgba(15,23,42,.08);
+  --shadow-lg:0 12px 32px rgba(15,23,42,.18);
+  --shadow-card:0 1px 2px rgba(15,23,42,.06);
+  --shadow-card-hover:0 8px 20px rgba(15,23,42,.12);
+  --shadow-hero:0 12px 32px rgba(13,27,51,.28);
+  --shadow-popover:0 12px 32px rgba(15,23,42,.18);
+
+  --rail-w:232px;
+  --rail-w-collapsed:60px;
+  --topbar-h:62px;
+
+  --font-display:"Space Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --font-body:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font:var(--font-body);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+
+/* ============================================================
+   Dark mode — a real second surface, not a filter.
+
+   Every component in this file and components.css draws its palette from
+   the slate scale, paper, ink, surface, muted, line and the tint tokens
+   above, so re-pointing those leaf values here re-themes the app without
+   touching component rules. The navy scale, Hero Navy and Signal Blue are
+   untouched on purpose: Hero Navy panels and the locked accent read the
+   same in both themes. The invoice facsimile (css/invoice.css, .doc) opts
+   back out of all of this — see the note there.
+   ============================================================ */
+:root[data-theme="dark"]{
+  --slate-900:#eef1f7;
+  --slate-700:#c7d0e0;
+  --slate-600:#aab4c7;
+  --slate-500:#8b96ac;
+  --slate-400:#55627d;
+  --slate-300:#34486e;
+  --slate-200:#223354;
+  --slate-100:#16203a;
+  --slate-50:#0f1729;
+
+  --paper:#0a0f1c;
+  --surface:#141f38;
+  --ink:#eef1f7;
+
+  --blue-50:rgba(37,99,235,.22);
+  --green-50:rgba(5,150,105,.2);
+  --amber-50:rgba(217,119,6,.2);
+  --red-50:rgba(220,38,38,.18);
+  --violet-50:rgba(124,58,237,.22);
+}
+
+/* Component tokens cover most of the app; these are the raw Bootstrap
+   classes actually used in markup (form fields, cards, tables, modals) that
+   carry their own hardcoded colors instead of reading ours. */
+[data-theme="dark"] .bg-white{background:var(--surface) !important;}
+[data-theme="dark"] .bg-light,
+[data-theme="dark"] .bg_gray_100{background:var(--slate-100) !important;}
+[data-theme="dark"] .card{background:var(--surface);border-color:var(--line);color:var(--ink);}
+[data-theme="dark"] .text-dark{color:var(--ink) !important;}
+[data-theme="dark"] .text-secondary{color:var(--slate-600) !important;}
+[data-theme="dark"] .text-muted{color:var(--slate-500) !important;}
+[data-theme="dark"] .border{border-color:var(--line) !important;}
+[data-theme="dark"] .table{color:var(--ink);}
+[data-theme="dark"] .table > :not(caption) > * > *{background-color:transparent;color:var(--ink);border-bottom-color:var(--line);}
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .input-group-text{
+  background-color:var(--surface);border-color:var(--slate-300);color:var(--ink);
+}
+[data-theme="dark"] .form-select{
+  background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%238b96ac' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+[data-theme="dark"] .form-control::placeholder{color:var(--slate-500);}
+[data-theme="dark"] .form-control:disabled,
+[data-theme="dark"] .form-select:disabled,
+[data-theme="dark"] .form-control[readonly]{background-color:var(--slate-100);}
+[data-theme="dark"] .modal-content{background:var(--surface);color:var(--ink);}
+[data-theme="dark"] .swal2-popup{background:var(--surface) !important;color:var(--ink) !important;}
+[data-theme="dark"] .swal2-title,
+[data-theme="dark"] .swal2-html-container{color:var(--ink) !important;}
+[data-theme="dark"] .dataTables_paginate .paginate_button.current{border-color:var(--slate-300) !important;}
+[data-theme="dark"] hr,
+[data-theme="dark"] .hr_gray_100,
+[data-theme="dark"] .hr_gray_200{background-color:var(--line) !important;}
+
+/* The bounded semantic set (badges, callouts) uses the -50 tokens above for
+   fill, but their border/text hex were tuned for a pale background and stay
+   too dark to read on a dark tint. */
+[data-theme="dark"] .lbadge-blue{border-color:#2c4a7a;}
+[data-theme="dark"] .lbadge-green{border-color:#1f5c47;}
+[data-theme="dark"] .lbadge-amber{border-color:#7a5a1f;}
+[data-theme="dark"] .lbadge-red{border-color:#7a2e2e;}
+[data-theme="dark"] .lbadge-violet{border-color:#4c3a7a;}
+[data-theme="dark"] .callout-info{border-color:#2c4a7a;color:#93c5fd;}
+[data-theme="dark"] .callout-warn{border-color:#7a5a1f;color:#fcd34d;}
+[data-theme="dark"] .callout-ok{border-color:#1f5c47;color:#6ee7b7;}
+[data-theme="dark"] .callout-danger{border-color:#7a2e2e;color:#fca5a5;}
+
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family:var(--font);
+  font-size:14px;
+  color:var(--ink);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+}
+:focus-visible{outline:2px solid var(--blue-500);outline-offset:2px;border-radius:4px;}
+h1,h2,h3,h4{margin:0;font-family:var(--font-display);font-weight:600;letter-spacing:-.01em;}
+p{margin:0 0 10px;}
+a{color:var(--blue-600);}
+.hidden{display:none !important;}
+.muted{color:var(--muted);}
+
+.mono{font-family:var(--mono);font-size:12.5px;}
+.right{text-align:right;}
+.center{text-align:center;}
+.nowrap{white-space:nowrap;}
+
+.screen{min-height:100vh;}
+
+/* ---------- Brand ---------- */
+.brand-lockup{display:flex;align-items:center;gap:12px;}
+.brand-mark{
+  width:42px;height:42px;border-radius:10px;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--navy-800),var(--navy-600));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:19px;letter-spacing:-.04em;
+}
+.brand-mark span{color:#7dd3fc;}
+.brand-mark-img{width:42px;height:42px;border-radius:10px;flex:0 0 auto;object-fit:cover;}
+.brand-lockup.sm .brand-mark{width:34px;height:34px;font-size:15px;border-radius:8px;}
+.brand-lockup.sm .brand-mark-img{width:34px;height:34px;border-radius:8px;}
+.brand-name{font-weight:700;font-size:15px;line-height:1.2;}
+.brand-sub{font-size:11.5px;color:var(--muted);margin-top:2px;}
+.brand-lockup.sm .brand-name{font-size:13.5px;}
+
+
+/* ---------- Onboarding shell ---------- */
+.ob-header{
+  height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+}
+.ob-shell{display:grid;grid-template-columns:296px minmax(0,1fr);min-height:calc(100vh - var(--topbar-h));}
+.ob-steps{background:var(--surface);border-right:1px solid var(--line);padding:26px 22px;}
+.ob-lane-badge{
+  font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--navy-700);background:var(--blue-50);border:1px solid #bfdbfe;
+  padding:6px 10px;border-radius:6px;display:inline-block;margin-bottom:20px;
+}
+.step-list{list-style:none;counter-reset:s;padding:0;margin:0;}
+.step-list li{
+  counter-increment:s;position:relative;padding:9px 0 9px 38px;
+  font-size:13px;color:var(--slate-500);line-height:1.4;
+}
+.step-list li::before{
+  content:counter(s);position:absolute;left:0;top:7px;
+  width:24px;height:24px;border-radius:50%;
+  border:1.5px solid var(--slate-300);background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11.5px;font-weight:700;color:var(--slate-400);
+}
+.step-list li.done{color:var(--slate-600);}
+.step-list li.done::before{
+  content:"\2713";background:var(--green-600);border-color:var(--green-600);color:#fff;
+}
+.step-list li.active{color:var(--navy-800);font-weight:650;}
+.step-list li.active::before{
+  background:var(--navy-800);border-color:var(--navy-800);color:#fff;
+}
+.step-list li.gate::after{
+  content:"GATE";position:absolute;right:0;top:11px;
+  font-size:9px;font-weight:800;letter-spacing:.06em;
+  color:var(--amber-600);background:var(--amber-50);
+  border:1px solid #fde68a;padding:1px 5px;border-radius:4px;
+}
+.ob-main{padding:36px 44px;overflow-y:auto;}
+.ob-panel{max-width:760px;}
+.ob-panel h2{font-size:21px;margin-bottom:8px;}
+.ob-panel .lede{color:var(--slate-600);margin-bottom:26px;line-height:1.6;}
+.ob-actions{display:flex;gap:10px;margin-top:28px;padding-top:22px;border-top:1px solid var(--line);}
+
+/* ---------- Shared bits still used by the new chrome ---------- */
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--navy-700);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;
+  gap:20px;margin-bottom:22px;flex-wrap:wrap;}
+.page-title{font-size:20px;}
+.page-sub{font-size:13px;color:var(--muted);margin-top:5px;max-width:720px;line-height:1.55;}
+.page-actions{display:flex;gap:9px;flex-wrap:wrap;}
+
+/* ---------- Utility layout ---------- */
+.grid{display:grid;gap:16px;}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr));}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr));}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr));}
+.stack{display:flex;flex-direction:column;gap:14px;}
+.lrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.spacer{flex:1;}
+
+@media (max-width:1180px){
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .g3{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:900px){
+  .ob-shell{grid-template-columns:1fr;}
+  .ob-steps{display:none;}
+  .g2,.g3,.g4{grid-template-columns:1fr;}
+}
