@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Electronic Invoicing System — Mockup
 
 Eastland Printink, Inc. (EPI). Demonstration mockup for BIR e-invoicing under
@@ -380,3 +381,6 @@ Vanilla JS, no framework, no build. Script order in `index.html` is fixed —
   NRDSP onboarding, multi-currency, series year rollover.
 
 **Invoice form.** Every invoice, client and EPI, prints on one form (`InvoiceDoc.render` in `js/invoice-doc.js`, styles under `.invform` in `css/invoice.css`), laid out as the sample in `Documentation/service-invoice-sample/` and described in `Documentation/02-invoice-specification.md`. The landing page picture is made from the real renderer with `node tools/landing-invoice.mjs img/hero-invoice.png`.
+=======
+# mockup-invoicing
+>>>>>>> b10fd977841c4d659807f0d82446674dabe3b99d
